@@ -1,0 +1,17 @@
+{
+  "name": "M5Cardputer",
+  "description": "Library for M5Stack M5Cardputer Board",
+  "keywords": "M5GFX,M5Stack,M5Cardputer",
+  "authors": {
+    "name": "M5Stack, Sean",
+    "url": "http://www.m5stack.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m5stack/M5Cardputer.git"
+  },
+  "version": "1.0.0",
+  "frameworks": ["arduino"],
+  "platforms": ["espressif32", "native"],
+  "headers": "M5Cardputer.h"
+}
