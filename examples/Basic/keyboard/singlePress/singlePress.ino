@@ -1,7 +1,7 @@
 /**
- * @file multiPress.ino
+ * @file singlePress.ino
  * @author SeanKwok (shaoxiang@m5stack.com)
- * @brief M5Cardputer multi key test
+ * @brief M5Cardputer single key test
  * @version 0.1
  * @date 2023-10-09
  *
@@ -23,32 +23,22 @@ void setup() {
     M5Cardputer.Display.setTextDatum(middle_center);
     M5Cardputer.Display.setTextFont(&fonts::FreeSerifBoldItalic18pt7b);
     M5Cardputer.Display.setTextSize(1);
-    M5Cardputer.Display.drawString("Press Any Key",
+    M5Cardputer.Display.drawString("Press m Key",
                                    M5Cardputer.Display.width() / 2,
                                    M5Cardputer.Display.height() / 2);
 }
 
 void loop() {
     M5Cardputer.update();
-    // max press 3 button at the same time
     if (M5Cardputer.Keyboard.isChange()) {
-        if (M5Cardputer.Keyboard.isPressed()) {
-            Keyboard_Class::KeysState status = M5Cardputer.Keyboard.keysState();
-            String keys                      = "";
-            for (auto i : status.values) {
-                if (keys != "") {
-                    keys = keys + "+" + i;
-                } else {
-                    keys += i;
-                }
-            }
+        if (M5Cardputer.Keyboard.isKeyPressed(KB_KEY_L_M)) {
             M5Cardputer.Display.clear();
-            M5Cardputer.Display.drawString(keys,
+            M5Cardputer.Display.drawString("m Pressed",
                                            M5Cardputer.Display.width() / 2,
                                            M5Cardputer.Display.height() / 2);
         } else {
             M5Cardputer.Display.clear();
-            M5Cardputer.Display.drawString("Press Any Key",
+            M5Cardputer.Display.drawString("Press m Key",
                                            M5Cardputer.Display.width() / 2,
                                            M5Cardputer.Display.height() / 2);
         }

@@ -55,50 +55,20 @@ void Keyboard_Class::begin() {
     _set_output(output_list, 0);
 }
 
-Point2D_t Keyboard_Class::getKey() {
-    Point2D_t coor;
-    coor.x = -1;
-    coor.y = -1;
-
-    uint8_t input_value = 0;
-
-    for (int i = 0; i < 8; i++) {
-        _set_output(output_list, i);
-        input_value = _get_input(input_list);
-
-        /* If key pressed */
-        if (input_value) {
-            /* Get X */
-            for (int j = 0; j < 7; j++) {
-                if (input_value == X_map_chart[j].value) {
-                    coor.x = (i > 3) ? X_map_chart[j].x_1 : X_map_chart[j].x_2;
-                    break;
-                }
-            }
-
-            /* Get Y */
-            coor.y = (i > 3) ? (i - 4) : i;
-
-            /* Keep the same as picture */
-            coor.y = -coor.y;
-            coor.y = coor.y + 3;
-
-            break;
-        }
-    }
-
-    // printf("%d,%d\n", x, y);
-    return coor;
-}
-
-uint8_t Keyboard_Class::getKeyNum(Point2D_t keyCoor) {
-    uint8_t ret = 0;
+int Keyboard_Class::getKeyCode(Point2D_t keyCoor) {
+    int ret = 0;
 
     if ((keyCoor.x < 0) || (keyCoor.y < 0)) {
         return 0;
     }
 
-    ret = (keyCoor.y * 14) + (keyCoor.x + 1);
+    // ret = (keyCoor.y * 14) + (keyCoor.x + 1);
+    if (_keys_state_buffer.ctrl || _keys_state_buffer.shift ||
+        _is_caps_locked) {
+        ret = _key_value_map[keyCoor.y][keyCoor.x].value_num_second;
+    } else {
+        ret = _key_value_map[keyCoor.y][keyCoor.x].value_num_first;
+    }
 
     return ret;
 }
@@ -147,18 +117,14 @@ bool Keyboard_Class::isChange() {
     }
 }
 
-// bool Keyboard_Class::isPressed(uint16_t key) {
-//     return _key_list_buffer.size();
-// }
-
-// bool Keyboard_Class::isKeyPressed(int keyNum) {
-//     if (_key_list_buffer.size()) {
-//         for (const auto& i : _key_list_buffer) {
-//             if (getKeyNum(i) == keyNum) return true;
-//         }
-//     }
-//     return false;
-// }
+bool Keyboard_Class::isKeyPressed(int keyCode) {
+    if (_key_list_buffer.size()) {
+        for (const auto& i : _key_list_buffer) {
+            if (getKeyCode(i) == keyCode) return true;
+        }
+    }
+    return false;
+}
 
 #include <cstring>
 

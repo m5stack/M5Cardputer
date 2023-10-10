@@ -1,9 +1,7 @@
-#ifndef M5DIAL_H
-#define M5DIAL_H
+#ifndef M5CARDPUTER_H
+#define M5CARDPUTER_H
 
 #include "M5Unified.h"
-
-// #include "utility/Encoder.h"
 #include "utility/Keyboard.h"
 
 namespace m5 {
