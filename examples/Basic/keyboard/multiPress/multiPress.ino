@@ -34,16 +34,21 @@ void loop() {
     if (M5Cardputer.Keyboard.isChange()) {
         if (M5Cardputer.Keyboard.isPressed()) {
             Keyboard_Class::KeysState status = M5Cardputer.Keyboard.keysState();
-            String keys                      = "";
+            String keyStr                    = "";
             for (auto i : status.values) {
-                if (keys != "") {
-                    keys = keys + "+" + i;
+                if (keyStr != "") {
+                    keyStr = keyStr + "+" + i;
                 } else {
-                    keys += i;
+                    keyStr += i;
                 }
             }
+            Serial.println("key num: ");
+            for (auto i : status.keys) {
+                Serial.printf("%d ", i);
+            }
+            Serial.println("");
             M5Cardputer.Display.clear();
-            M5Cardputer.Display.drawString(keys,
+            M5Cardputer.Display.drawString(keyStr,
                                            M5Cardputer.Display.width() / 2,
                                            M5Cardputer.Display.height() / 2);
         } else {

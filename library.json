@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/m5stack/M5Cardputer.git"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "frameworks": ["arduino"],
   "platforms": ["espressif32", "native"],
   "headers": "M5Cardputer.h"

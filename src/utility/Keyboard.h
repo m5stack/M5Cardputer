@@ -111,6 +111,7 @@ class Keyboard_Class {
         bool space = false;
 
         std::vector<char> values;
+        std::vector<int> keys;
 
         void reset() {
             tab   = false;
@@ -124,6 +125,7 @@ class Keyboard_Class {
             space = false;
 
             values.clear();
+            keys.clear();
         }
     };
 
