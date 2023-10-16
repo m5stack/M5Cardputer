@@ -55,21 +55,18 @@ void Keyboard_Class::begin() {
     _set_output(output_list, 0);
 }
 
-int Keyboard_Class::getKeyCode(Point2D_t keyCoor) {
-    int ret = 0;
+uint8_t Keyboard_Class::getKey(Point2D_t keyCoor) {
+    uint8_t ret = 0;
 
     if ((keyCoor.x < 0) || (keyCoor.y < 0)) {
         return 0;
     }
-
-    // ret = (keyCoor.y * 14) + (keyCoor.x + 1);
     if (_keys_state_buffer.ctrl || _keys_state_buffer.shift ||
         _is_caps_locked) {
-        ret = _key_value_map[keyCoor.y][keyCoor.x].value_num_second;
+        ret = _key_value_map[keyCoor.y][keyCoor.x].value_second;
     } else {
-        ret = _key_value_map[keyCoor.y][keyCoor.x].value_num_first;
+        ret = _key_value_map[keyCoor.y][keyCoor.x].value_first;
     }
-
     return ret;
 }
 
@@ -117,10 +114,10 @@ bool Keyboard_Class::isChange() {
     }
 }
 
-bool Keyboard_Class::isKeyPressed(int keyCode) {
+bool Keyboard_Class::isKeyPressed(char c) {
     if (_key_list_buffer.size()) {
         for (const auto& i : _key_list_buffer) {
-            if (getKeyCode(i) == keyCode) return true;
+            if (getKey(i) == c) return true;
         }
     }
     return false;
@@ -130,66 +127,94 @@ bool Keyboard_Class::isKeyPressed(int keyCode) {
 
 void Keyboard_Class::updateKeysState() {
     _keys_state_buffer.reset();
-    _key_values_without_special_keys.clear();
+    _key_pos_print_keys.clear();
+    _key_pos_hid_keys.clear();
+    _key_pos_modifier_keys.clear();
 
     // Get special keys
     for (auto& i : _key_list_buffer) {
-        if (strcmp(getKeyValue(i).value_first, "tab") == 0) {
-            _keys_state_buffer.tab = true;
-            continue;
-        }
-
-        if (strcmp(getKeyValue(i).value_first, "fn") == 0) {
+        // modifier
+        if (getKeyValue(i).value_first == KEY_FN) {
             _keys_state_buffer.fn = true;
             continue;
         }
-
-        if (strcmp(getKeyValue(i).value_first, "shift") == 0) {
-            _keys_state_buffer.shift = true;
-            continue;
-        }
-
-        if (strcmp(getKeyValue(i).value_first, "ctrl") == 0) {
-            _keys_state_buffer.ctrl = true;
-            continue;
-        }
-        if (strcmp(getKeyValue(i).value_first, "opt") == 0) {
+        if (getKeyValue(i).value_first == KEY_OPT) {
             _keys_state_buffer.opt = true;
             continue;
         }
 
-        if (strcmp(getKeyValue(i).value_first, "alt") == 0) {
+        if (getKeyValue(i).value_first == KEY_LEFT_CTRL) {
+            _keys_state_buffer.ctrl = true;
+            _key_pos_modifier_keys.push_back(i);
+            continue;
+        }
+
+        if (getKeyValue(i).value_first == KEY_LEFT_SHIFT) {
+            _keys_state_buffer.shift = true;
+            _key_pos_modifier_keys.push_back(i);
+            continue;
+        }
+
+        if (getKeyValue(i).value_first == KEY_LEFT_ALT) {
             _keys_state_buffer.alt = true;
+            _key_pos_modifier_keys.push_back(i);
             continue;
         }
 
-        if (strcmp(getKeyValue(i).value_first, "del") == 0) {
+        // function
+        if (getKeyValue(i).value_first == KEY_TAB) {
+            _keys_state_buffer.tab = true;
+            _key_pos_hid_keys.push_back(i);
+            continue;
+        }
+
+        if (getKeyValue(i).value_first == KEY_BACKSPACE) {
             _keys_state_buffer.del = true;
+            _key_pos_hid_keys.push_back(i);
             continue;
         }
 
-        if (strcmp(getKeyValue(i).value_first, "enter") == 0) {
+        if (getKeyValue(i).value_first == KEY_ENTER) {
             _keys_state_buffer.enter = true;
+            _key_pos_hid_keys.push_back(i);
             continue;
         }
 
-        if (strcmp(getKeyValue(i).value_first, "space") == 0) {
+        if (getKeyValue(i).value_first == ' ') {
             _keys_state_buffer.space = true;
+        }
+        _key_pos_hid_keys.push_back(i);
+        _key_pos_print_keys.push_back(i);
+    }
+
+    for (auto& i : _key_pos_modifier_keys) {
+        uint8_t key = getKeyValue(i).value_first;
+        _keys_state_buffer.modifier_keys.push_back(key);
+    }
+
+    for (auto& k : _keys_state_buffer.modifier_keys) {
+        _keys_state_buffer.modifiers |= (1 << (k - 0x80));
+    }
+
+    for (auto& i : _key_pos_hid_keys) {
+        uint8_t k = getKeyValue(i).value_first;
+        if (k == KEY_TAB || k == KEY_BACKSPACE || k == KEY_ENTER) {
+            _keys_state_buffer.hid_keys.push_back(k);
             continue;
         }
-
-        _key_values_without_special_keys.push_back(i);
+        uint8_t key = _kb_asciimap[k];
+        if (key) {
+            _keys_state_buffer.hid_keys.push_back(key);
+        }
     }
 
     // Deal what left
-    for (auto& i : _key_values_without_special_keys) {
+    for (auto& i : _key_pos_print_keys) {
         if (_keys_state_buffer.ctrl || _keys_state_buffer.shift ||
             _is_caps_locked) {
-            _keys_state_buffer.values.push_back(*getKeyValue(i).value_second);
-            _keys_state_buffer.keys.push_back(getKeyValue(i).value_num_second);
+            _keys_state_buffer.word.push_back(getKeyValue(i).value_second);
         } else {
-            _keys_state_buffer.values.push_back(*getKeyValue(i).value_first);
-            _keys_state_buffer.keys.push_back(getKeyValue(i).value_num_first);
+            _keys_state_buffer.word.push_back(getKeyValue(i).value_first);
         }
     }
 }

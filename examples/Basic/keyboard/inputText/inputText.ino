@@ -3,7 +3,7 @@
  * @author SeanKwok (shaoxiang@m5stack.com)
  * @brief M5Cardputer input text test
  * @version 0.1
- * @date 2023-10-09
+ * @date 2023-10-13
  *
  *
  * @Hardwares: M5Cardputer
@@ -47,7 +47,7 @@ void loop() {
         if (M5Cardputer.Keyboard.isPressed()) {
             Keyboard_Class::KeysState status = M5Cardputer.Keyboard.keysState();
 
-            for (auto i : status.values) {
+            for (auto i : status.word) {
                 data += i;
             }
 

@@ -3,7 +3,7 @@
  * @author SeanKwok (shaoxiang@m5stack.com)
  * @brief M5Cardputer single key test
  * @version 0.1
- * @date 2023-10-09
+ * @date 2023-10-13
  *
  *
  * @Hardwares: M5Cardputer
@@ -23,7 +23,7 @@ void setup() {
     M5Cardputer.Display.setTextDatum(middle_center);
     M5Cardputer.Display.setTextFont(&fonts::FreeSerifBoldItalic18pt7b);
     M5Cardputer.Display.setTextSize(1);
-    M5Cardputer.Display.drawString("Press m Key",
+    M5Cardputer.Display.drawString("Press a Key",
                                    M5Cardputer.Display.width() / 2,
                                    M5Cardputer.Display.height() / 2);
 }
@@ -31,14 +31,14 @@ void setup() {
 void loop() {
     M5Cardputer.update();
     if (M5Cardputer.Keyboard.isChange()) {
-        if (M5Cardputer.Keyboard.isKeyPressed(KB_KEY_L_M)) {
+        if (M5Cardputer.Keyboard.isKeyPressed('a')) {
             M5Cardputer.Display.clear();
-            M5Cardputer.Display.drawString("m Pressed",
+            M5Cardputer.Display.drawString("a Pressed",
                                            M5Cardputer.Display.width() / 2,
                                            M5Cardputer.Display.height() / 2);
         } else {
             M5Cardputer.Display.clear();
-            M5Cardputer.Display.drawString("Press m Key",
+            M5Cardputer.Display.drawString("Press a Key",
                                            M5Cardputer.Display.width() / 2,
                                            M5Cardputer.Display.height() / 2);
         }
