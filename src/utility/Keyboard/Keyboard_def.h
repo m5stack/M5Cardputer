@@ -17,9 +17,30 @@
 #define KEY_FN  0xff
 #define KEY_OPT 0x00
 
+#define KEY_F1  0x3A
+#define KEY_F2  0x3B
+#define KEY_F3  0x3C
+#define KEY_F4  0x3D
+#define KEY_F5  0x3E
+#define KEY_F6  0x3F
+#define KEY_F7  0x40
+#define KEY_F8  0x41
+#define KEY_F9  0x42
+#define KEY_F10 0x43
+#define KEY_F11 0x44
+#define KEY_F12 0x45
+
+#define KEY_RIGHT 0x4F
+#define KEY_LEFT  0x50
+#define KEY_DOWN  0x51
+#define KEY_UP    0x52
+
 #define KEY_BACKSPACE 0x2a
 #define KEY_TAB       0x2b
 #define KEY_ENTER     0x28
+#define KEY_ESCAPE    0x29
+#define KEY_DELETE    0x4c
+#define KEY_NONE      0x00
 
 const uint8_t _kb_asciimap[128] = {
     0x00,           // NUL
@@ -38,7 +59,7 @@ const uint8_t _kb_asciimap[128] = {
     0x00,           // CR
     0x00,           // SO
     0x00,           // SI
-    0x00,           // DEL
+    KEY_DELETE,     // DEL
     0x00,           // DC1
     0x00,           // DC2
     0x00,           // DC3
@@ -49,7 +70,7 @@ const uint8_t _kb_asciimap[128] = {
     0x00,           // CAN
     0x00,           // EM
     0x00,           // SUB
-    0x00,           // ESC
+    KEY_ESCAPE,     // ESC
     0x00,           // FS
     0x00,           // GS
     0x00,           // RS

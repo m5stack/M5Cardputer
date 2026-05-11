@@ -118,6 +118,8 @@ void Keyboard_Class::updateKeysState()
         switch (key_code) {
             case KEY_FN:
                 _keys_state_buffer.fn = true;
+                _key_pos_modifier_keys.push_back(key_pos);
+                _keys_state_buffer.modifier_keys.push_back(key_code);
                 break;
             case KEY_OPT:
                 _keys_state_buffer.opt = true;
@@ -145,7 +147,85 @@ void Keyboard_Class::updateKeysState()
     }
 
     // =================================================================
-    // PASS 2: Process all non-modifier keys.
+    // PASS 2: Process fn-layer keys.
+    // Now the modifier state is correct, regardless of key order.
+    // The fn-layer has precedence over special keys too
+    // =================================================================
+    if (_keys_state_buffer.fn) {
+        for (const auto& key_pos : keys) {
+            const KeyValue_t key_value = getKeyValue(key_pos);
+            const uint8_t key_code     = key_value.value_third;
+
+            // printf("%d\n", key_code);
+            if (key_code == KEY_NONE) {
+                continue;
+            }
+
+            // Skip modifier keys as they were handled in the first pass
+            switch (key_code) {
+                case KEY_ESCAPE:
+                    _keys_state_buffer.esc = true;
+                    break;
+                case KEY_DELETE:
+                    _keys_state_buffer.del = true;
+                    break;
+                case KEY_F1:
+                    _keys_state_buffer.f1 = true;
+                    break;
+                case KEY_F2:
+                    _keys_state_buffer.f2 = true;
+                    break;
+                case KEY_F3:
+                    _keys_state_buffer.f3 = true;
+                    break;
+                case KEY_F4:
+                    _keys_state_buffer.f4 = true;
+                    break;
+                case KEY_F5:
+                    _keys_state_buffer.f5 = true;
+                    break;
+                case KEY_F6:
+                    _keys_state_buffer.f6 = true;
+                    break;
+                case KEY_F7:
+                    _keys_state_buffer.f7 = true;
+                    break;
+                case KEY_F8:
+                    _keys_state_buffer.f8 = true;
+                    break;
+                case KEY_F9:
+                    _keys_state_buffer.f9 = true;
+                    break;
+                case KEY_F10:
+                    _keys_state_buffer.f10 = true;
+                    break;
+                case KEY_F11:
+                    _keys_state_buffer.f11 = true;
+                    break;
+                case KEY_F12:
+                    _keys_state_buffer.f12 = true;
+                    break;
+                case KEY_UP:
+                    _keys_state_buffer.up = true;
+                    break;
+                case KEY_LEFT:
+                    _keys_state_buffer.left = true;
+                    break;
+                case KEY_DOWN:
+                    _keys_state_buffer.down = true;
+                    break;
+                case KEY_RIGHT:
+                    _keys_state_buffer.right = true;
+                    break;
+            }
+            _key_pos_hid_keys.push_back(key_pos);
+            _keys_state_buffer.hid_keys.push_back(key_code);
+        }
+        return;
+    }
+
+    // =================================================================
+    // PASS 3: Process all non-modifier keys.
     // Now the modifier state is correct, regardless of key order.
     // =================================================================
     for (const auto& key_pos : keys) {
@@ -156,7 +236,6 @@ void Keyboard_Class::updateKeysState()
 
         // Skip modifier keys as they were handled in the first pass
         switch (key_code) {
-            case KEY_FN:
             case KEY_OPT:
             case KEY_LEFT_CTRL:
             case KEY_LEFT_SHIFT:
@@ -172,7 +251,7 @@ void Keyboard_Class::updateKeysState()
                 _keys_state_buffer.hid_keys.push_back(key_code);
                 continue;  // Skip further processing for this key
             case KEY_BACKSPACE:
-                _keys_state_buffer.del = true;
+                _keys_state_buffer.backspace = true;
                 _key_pos_hid_keys.push_back(key_pos);
                 _keys_state_buffer.hid_keys.push_back(key_code);
                 continue;  // Skip further processing for this key
