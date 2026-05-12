@@ -16,7 +16,7 @@ struct KeyValue_t {
     const char value_third;  // fn layer
 };
 
-const KeyValue_t _key_value_map[4][14] = {{{'`', '~', KEY_NONE},
+const KeyValue_t _key_value_map[4][14] = {{{'`', '~', KEY_ESCAPE},
                                            {'1', '!', KEY_F1},
                                            {'2', '@', KEY_F2},
                                            {'3', '#', KEY_F3},
@@ -55,7 +55,7 @@ const KeyValue_t _key_value_map[4][14] = {{{'`', '~', KEY_NONE},
                                            {'j', 'J', KEY_NONE},
                                            {'k', 'K', KEY_NONE},
                                            {'l', 'L', KEY_NONE},
-                                           {';', ':', KEY_NONE},
+                                           {';', ':', KEY_UP},
                                            {'\'', '\"', KEY_NONE},
                                            {KEY_ENTER, KEY_ENTER, KEY_NONE}},
                                           {{KEY_LEFT_CTRL, KEY_LEFT_CTRL, KEY_NONE},
@@ -71,7 +71,7 @@ const KeyValue_t _key_value_map[4][14] = {{{'`', '~', KEY_NONE},
                                            {',', '<', KEY_LEFT},
                                            {'.', '>', KEY_DOWN},
                                            {'/', '?', KEY_RIGHT},
-                                           {' ', ' ', KEY_UP}}};
+                                           {' ', ' ', KEY_NONE}}};
 
 class Keyboard_Class {
 public:
