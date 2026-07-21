@@ -22,6 +22,6 @@
   "dependencies": {
     "M5Unified": "*",
     "M5GFX": "*",
-    "IRremote": "*"
+    "arduino-irremote/IRremote": "*"
   }
 }
